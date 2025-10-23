@@ -16,11 +16,28 @@ console.log('✅ App imported successfully');
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   console.log(`📄 Serving index page at http://localhost:${PORT}/`);
   console.log(`📋 API endpoints:`);
   console.log(`   POST /api/process-text - Process text input`);
   console.log(`   POST /api/process-pdf - Process PDF upload`);
   console.log(`   POST /api/analyze-nlp - Analyze text with Google Cloud NLP`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
