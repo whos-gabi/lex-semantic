@@ -22,9 +22,17 @@ app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
 // API routes
 app.use('/api', apiRoutes);
 
-// Serve index page for root route
+// Route handlers
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'pages', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'pages', 'home.html'));
+});
+
+app.get('/semantix', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'pages', 'semantix.html'));
+});
+
+app.get('/blacklaw', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'pages', 'blacklaw.html'));
 });
 
 // Error handling middleware

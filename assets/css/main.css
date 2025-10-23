@@ -9,6 +9,12 @@
   --danger-color: #dc3545;
   --light-color: #f8f9fa;
   --dark-color: #212529;
+  /* custom colours */
+  --green-zomp: #5F9577;
+  --white-smoke: #F5F5F5;
+  --arg-blue: #35A7FF;
+  --night: #151515;
+  --red: #FA003F;
 }
 
 /* Custom styles */
@@ -16,7 +22,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.navbar-brand {
+/* .navbar-brand {
   font-size: 1.5rem;
 }
 
@@ -49,7 +55,6 @@ body {
   transform: translateY(-5px);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .hero-section {
     padding: 2rem 0;
@@ -60,7 +65,6 @@ body {
   }
 }
 
-/* Animation classes */
 .fade-in {
   animation: fadeIn 0.6s ease-in;
 }
@@ -77,4 +81,56 @@ body {
 @keyframes slideInLeft {
   from { opacity: 0; transform: translateX(-30px); }
   to { opacity: 1; transform: translateX(0); }
+} */
+
+
+/* Highlight classes */
+
+.noun-highlight {
+  background-color: #007bff;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+.verb-highlight {
+  background-color: #e91e63;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+.highlighted-text {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.red-text {
+  color: var(--red);
+}
+.green-text {
+  color: var(--green-zomp);
+}
+.white-smoke-text {
+  color: var(--white-smoke);
+}
+.arg-blue-text {
+  color: var(--arg-blue);
+}
+.night-text {
+  color: var(--night);
+}
+
+/* Background classes */
+.bg-green-zomp {
+  background-color: var(--green-zomp);
+}
+.bg-white-smoke {
+  background-color: var(--white-smoke);
+}
+.bg-arg-blue {
+  background-color: var(--arg-blue);
+}
+.bg-night {
+  background-color: var(--night);
 }
