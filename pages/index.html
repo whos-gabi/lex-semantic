@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lex Semantic</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .noun-highlight {
+            background-color: #007bff;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .verb-highlight {
+            background-color: #e91e63;
+            color: white;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .highlighted-text {
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Dark Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-file-earmark-break-fill me-2 text-warning"></i>Lex Semantic
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 fw-bold text-primary mb-4">
+                            Lex Semantic
+                        </h1>
+                        <p class="lead text-muted">
+                            Advanced semantic analysis and natural language processing platform
+                        </p>
+                    </div>
+
+                    <!-- Input Method Selection -->
+                    <div class="card shadow-lg border-0 mb-4" id="inputMethodCard">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-center mb-4">Choose Input Method</h5>
+                            
+                            <!-- Switch Buttons -->
+                            <div class="d-flex justify-content-center mb-4">
+                                <div class="btn-group" role="group" aria-label="Input method selection">
+                                    <input type="radio" class="btn-check" name="inputMethod" id="pasteText" value="paste" checked>
+                                    <label class="btn btn-outline-primary" for="pasteText">
+                                        <i class="bi bi-clipboard-text me-2"></i>Paste Text
+                                    </label>
+                                    
+                                    <input type="radio" class="btn-check" name="inputMethod" id="uploadPdf" value="upload">
+                                    <label class="btn btn-outline-primary" for="uploadPdf">
+                                        <i class="bi bi-file-earmark-pdf me-2"></i>Upload PDF
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Text Input Section -->
+                            <div id="textInputSection" class="input-section">
+                                <div class="mb-3">
+                                    <label for="textInput" class="form-label">Enter your text:</label>
+                                    <textarea class="form-control" id="textInput" rows="6" placeholder="Paste your text here..."></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" id="processTextBtn">
+                                        <i class="bi bi-arrow-right me-2"></i>Process Text
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PDF Upload Section -->
+                            <div id="pdfUploadSection" class="input-section" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="pdfFile" class="form-label">Upload PDF file:</label>
+                                    <input type="file" class="form-control" id="pdfFile" accept=".pdf">
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" id="processPdfBtn" disabled>
+                                        <i class="bi bi-upload me-2"></i>Upload & Process PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Status -->
+                    <div class="card shadow-lg border-0 mb-4" id="processingCard" style="display: none;">
+                        <div class="card-body p-4 text-center">
+                            <div class="spinner-border text-primary mb-3" role="status">
+                                <span class="visually-hidden">Processing...</span>
+                            </div>
+                            <h5 class="card-title">Processing your document...</h5>
+                            <p class="text-muted">Please wait while we extract and format your text.</p>
+                        </div>
+                    </div>
+
+                    <!-- Formatted Text Result -->
+                    <div class="card shadow-lg border-0" id="resultCard" style="display: none;">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Formatted Text
+                            </h5>
+                            <div class="bg-light rounded p-3 mb-3">
+                                <pre id="formattedText" class="mb-0" style="white-space: pre-wrap; font-family: inherit;"></pre>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary" id="editTextBtn">
+                                    <i class="bi bi-pencil me-2"></i>Edit Text
+                                </button>
+                                <button type="button" class="btn btn-success" id="finalizeBtn">
+                                    <i class="bi bi-check-lg me-2"></i>Process
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NLP Analysis Result -->
+                    <div class="card shadow-lg border-0" id="nlpResultCard" style="display: none;">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-brain text-primary me-2"></i>NLP Analysis
+                            </h5>
+                            <div class="mb-3">
+                                <div class="d-flex gap-3 mb-2">
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-tag me-1"></i><span id="nounCount">0</span> Nouns
+                                    </span>
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-tag me-1"></i><span id="verbCount">0</span> Verbs
+                                    </span>
+                                </div>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Nouns</strong> are highlighted in <span class="noun-highlight">blue</span> and 
+                                    <strong>Verbs</strong> are highlighted in <span class="verb-highlight">pink</span>
+                                </div>
+                            </div>
+                            <div class="bg-light rounded p-3 mb-3">
+                                <div id="highlightedText" class="highlighted-text"></div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary" id="backToEditBtn">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to Edit
+                                </button>
+                                <button type="button" class="btn btn-primary" id="downloadBtn">
+                                    <i class="bi bi-download me-2"></i>Download Analysis
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+
+    <!-- Mini Footer -->
+    <footer class="bg-dark text-light py-3 mt-auto">
+       
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 small">
+                        <i class="bi bi-c-circle me-1"></i> <span id="year"></span> Lex Semantic. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <!-- <div class="d-flex justify-content-md-end gap-3">
+                        <a href="#" class="text-light text-decoration-none small">
+                            <i class="bi bi-github me-1"></i>GitHub
+                        </a>
+                        <a href="#" class="text-light text-decoration-none small">
+                            <i class="bi bi-twitter me-1"></i>Twitter
+                        </a>
+                        <a href="#" class="text-light text-decoration-none small">
+                            <i class="bi bi-linkedin me-1"></i>LinkedIn
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        const year = new Date().getFullYear();
+        document.getElementById('year').innerHTML = year;
+
+        // Application JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputMethodRadios = document.querySelectorAll('input[name="inputMethod"]');
+            const textInputSection = document.getElementById('textInputSection');
+            const pdfUploadSection = document.getElementById('pdfUploadSection');
+            const processTextBtn = document.getElementById('processTextBtn');
+            const processPdfBtn = document.getElementById('processPdfBtn');
+            const pdfFileInput = document.getElementById('pdfFile');
+            const processingCard = document.getElementById('processingCard');
+            const resultCard = document.getElementById('resultCard');
+            const nlpResultCard = document.getElementById('nlpResultCard');
+            const inputMethodCard = document.getElementById('inputMethodCard');
+            const formattedTextElement = document.getElementById('formattedText');
+            const editTextBtn = document.getElementById('editTextBtn');
+            const finalizeBtn = document.getElementById('finalizeBtn');
+            const backToEditBtn = document.getElementById('backToEditBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Switch between input methods
+            inputMethodRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'paste') {
+                        textInputSection.style.display = 'block';
+                        pdfUploadSection.style.display = 'none';
+                    } else {
+                        textInputSection.style.display = 'none';
+                        pdfUploadSection.style.display = 'block';
+                    }
+                });
+            });
+
+            // Enable PDF button when file is selected
+            pdfFileInput.addEventListener('change', function() {
+                processPdfBtn.disabled = !this.files.length;
+            });
+
+            // Process text input
+            processTextBtn.addEventListener('click', async function() {
+                const textInput = document.getElementById('textInput');
+                const text = textInput.value.trim();
+                
+                if (!text) {
+                    alert('Please enter some text to process.');
+                    return;
+                }
+
+                await processText(text);
+            });
+
+            // Process PDF upload
+            processPdfBtn.addEventListener('click', async function() {
+                const file = pdfFileInput.files[0];
+                if (!file) {
+                    alert('Please select a PDF file.');
+                    return;
+                }
+
+                await processPdf(file);
+            });
+
+            // Edit text functionality
+            editTextBtn.addEventListener('click', function() {
+                const currentText = formattedTextElement.textContent;
+                const newText = prompt('Edit the text:', currentText);
+                if (newText !== null) {
+                    formattedTextElement.textContent = newText;
+                }
+            });
+
+            // Process functionality (NLP Analysis)
+            finalizeBtn.addEventListener('click', async function() {
+                const text = formattedTextElement.textContent;
+                if (!text) {
+                    alert('No text to process.');
+                    return;
+                }
+
+                await processWithNLP(text);
+            });
+
+            // Back to edit functionality
+            backToEditBtn.addEventListener('click', function() {
+                nlpResultCard.style.display = 'none';
+                resultCard.style.display = 'block';
+            });
+
+            // Download functionality
+            downloadBtn.addEventListener('click', function() {
+                const highlightedText = document.getElementById('highlightedText').innerHTML;
+                const nounCount = document.getElementById('nounCount').textContent;
+                const verbCount = document.getElementById('verbCount').textContent;
+                
+                const content = `NLP Analysis Results\n\nNouns: ${nounCount}\nVerbs: ${verbCount}\n\nHighlighted Text:\n${highlightedText.replace(/<[^>]*>/g, '')}`;
+                
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'nlp-analysis.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // Helper function to show processing state
+            function showProcessing() {
+                inputMethodCard.style.display = 'none';
+                processingCard.style.display = 'block';
+                resultCard.style.display = 'none';
+            }
+
+            // Helper function to show result
+            function showResult(formattedText) {
+                inputMethodCard.style.display = 'none';
+                processingCard.style.display = 'none';
+                resultCard.style.display = 'block';
+                nlpResultCard.style.display = 'none';
+                formattedTextElement.textContent = formattedText;
+            }
+
+            // Helper function to show NLP result
+            function showNLPResult(analysis) {
+                inputMethodCard.style.display = 'none';
+                processingCard.style.display = 'none';
+                resultCard.style.display = 'none';
+                nlpResultCard.style.display = 'block';
+                
+                document.getElementById('highlightedText').innerHTML = analysis.highlightedText;
+                document.getElementById('nounCount').textContent = analysis.nounCount;
+                document.getElementById('verbCount').textContent = analysis.verbCount;
+            }
+
+            // Helper function to process text
+            async function processText(text) {
+                showProcessing();
+                
+                try {
+                    const response = await fetch('/api/process-text', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showResult(data.formattedText);
+                    } else {
+                        throw new Error(data.error || 'Failed to process text');
+                    }
+                } catch (error) {
+                    alert('Error processing text: ' + error.message);
+                    resetForm();
+                }
+            }
+
+            // Helper function to process PDF
+            async function processPdf(file) {
+                showProcessing();
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('pdf', file);
+
+                    const response = await fetch('/api/process-pdf', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showResult(data.formattedText);
+                    } else {
+                        throw new Error(data.error || 'Failed to process PDF');
+                    }
+                } catch (error) {
+                    alert('Error processing PDF: ' + error.message);
+                    resetForm();
+                }
+            }
+
+            // Helper function to process with NLP
+            async function processWithNLP(text) {
+                showProcessing();
+                
+                try {
+                    const response = await fetch('/api/analyze-nlp', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text })
+                    });
+
+                    const analysis = await response.json();
+                    
+                    if (response.ok) {
+                        showNLPResult(analysis);
+                    } else {
+                        throw new Error(analysis.error || 'Failed to analyze text');
+                    }
+                } catch (error) {
+                    alert('Error analyzing text: ' + error.message);
+                    showResult(text); // Fallback to showing original text
+                }
+            }
+
+            // Helper function to reset form
+            function resetForm() {
+                inputMethodCard.style.display = 'block';
+                processingCard.style.display = 'none';
+                resultCard.style.display = 'none';
+                nlpResultCard.style.display = 'none';
+                document.getElementById('textInput').value = '';
+                pdfFileInput.value = '';
+                processPdfBtn.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
