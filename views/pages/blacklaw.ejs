@@ -1,0 +1,243 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold arg-blue-text mb-3">
+                    <i class="bi bi-book me-3"></i>BlackLawDex2nd
+                </h1>
+                <p class="lead text-muted">
+                    Comprehensive Legal Dictionary with US Courts Glossary & Black's Law Dictionary 2nd Edition
+                </p>
+            </div>
+
+           
+
+            <!-- Search Section -->
+            <div class="card shadow-lg border-0 mb-4 search-section">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-arg-blue text-white">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="dictionarySearch" 
+                                       placeholder="Search legal terms, definitions, or concepts..."
+                                       autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-3 mt-md-0">
+                            <div class="d-flex gap-2">
+                                <button class="btn bg-arg-blue text-white" id="searchBtn" disabled>
+                                    <i class="bi bi-search me-2"></i>Search
+                                </button>
+                                <button class="btn btn-outline-secondary" id="clearBtn" disabled>
+                                    <i class="bi bi-x-circle me-2"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Section -->
+            <div class="text-center py-5" id="loadingSection" style="display: none;">
+                <div class="spinner-border arg-blue-text mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted">Searching dictionaries...</p>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 arg-blue-text">
+                        <i class="bi bi-list-ul me-2"></i>Search Results
+                        <span class="badge bg-arg-blue text-white ms-2" id="resultsCount">0</span>
+                    </h5>
+                    <small class="text-muted" id="searchQuery"></small>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+
+            <!-- No Results Section -->
+            <div class="text-center py-5" id="noResultsSection" style="display: none;">
+                <div class="mb-4">
+                    <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+                </div>
+                <h5 class="text-muted">No results found</h5>
+                <p class="text-muted">Try searching with different keywords or check your spelling.</p>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="text-center py-5" id="welcomeSection">
+                <div class="mb-4">
+                    <i class="bi bi-book arg-blue-text" style="font-size: 4rem;"></i>
+                </div>
+                <h4 class="arg-blue-text mb-3">Welcome to BlackLawDex2nd</h4>
+                <p class="text-muted mb-4">
+                    Search through thousands of legal terms from the US Courts Glossary and Black's Law Dictionary 2nd Edition.
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-arg-blue bg-opacity-10 stats-card">
+                            <div class="card-body text-center d-flex flex-column justify-content-center">
+                                <i class="bi bi-building fs-3 mb-2" style="color: var(--night);"></i>
+                                <h6 style="color: var(--night);">US Courts Glossary</h6>
+                                <small class="text-muted">Federal court terminology and procedures</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 bg-green-zomp bg-opacity-10 stats-card">
+                            <div class="card-body text-center d-flex flex-column justify-content-center">
+                                <i class="bi bi-book fs-3 mb-2" style="color: var(--night);"></i>
+                                <h6 style="color: var(--night);">Black's Law Dictionary</h6>
+                                <small class="text-muted">Comprehensive legal definitions and terms</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('dictionarySearch');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loadingSection = document.getElementById('loadingSection');
+    const resultsSection = document.getElementById('resultsSection');
+    const noResultsSection = document.getElementById('noResultsSection');
+    const welcomeSection = document.getElementById('welcomeSection');
+    const statsSection = document.getElementById('statsSection');
+    const searchResults = document.getElementById('searchResults');
+    const resultsCount = document.getElementById('resultsCount');
+    const searchQuery = document.getElementById('searchQuery');
+    const uscCount = document.getElementById('uscCount');
+    const bldCount = document.getElementById('bldCount');
+    const totalCount = document.getElementById('totalCount');
+
+    let searchTimeout;
+
+    // Stats are now static, no need to load dynamically
+
+    // Search input event
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        searchBtn.disabled = !query;
+        clearBtn.disabled = !query;
+
+        // Clear timeout if user is still typing
+        clearTimeout(searchTimeout);
+        
+        if (query.length >= 2) {
+            // Debounce search
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        } else if (query.length === 0) {
+            showWelcome();
+        }
+    });
+
+    // Search button click
+    searchBtn.addEventListener('click', function() {
+        const query = searchInput.value.trim();
+        if (query) {
+            performSearch(query);
+        }
+    });
+
+    // Clear button click
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchBtn.disabled = true;
+        clearBtn.disabled = true;
+        showWelcome();
+    });
+
+    // Enter key search
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const query = this.value.trim();
+            if (query) {
+                performSearch(query);
+            }
+        }
+    });
+
+    async function performSearch(query) {
+        showLoading();
+        
+        try {
+            const response = await fetch(`/api/dictionary/search?q=${encodeURIComponent(query)}&limit=20`);
+            const data = await response.json();
+            
+            if (response.ok) {
+                displayResults(data.results, query);
+            } else {
+                throw new Error(data.error || 'Search failed');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            showNoResults();
+        }
+    }
+
+    function displayResults(results, query) {
+        if (results.length === 0) {
+            showNoResults();
+            return;
+        }
+
+        // Hide other sections
+        loadingSection.style.display = 'none';
+        noResultsSection.style.display = 'none';
+        welcomeSection.style.display = 'none';
+
+        // Show results
+        resultsSection.style.display = 'block';
+        resultsCount.textContent = results.length;
+        searchQuery.textContent = `"${query}"`;
+
+        // Render results via server-rendered EJS partial
+        fetch(`/api/dictionary/search-view?q=${encodeURIComponent(query)}&limit=20`)
+          .then(r => r.text())
+          .then(html => {
+            searchResults.innerHTML = html;
+          })
+          .catch(() => {
+            searchResults.innerHTML = '';
+          });
+    }
+
+    function showLoading() {
+        loadingSection.style.display = 'block';
+        resultsSection.style.display = 'none';
+        noResultsSection.style.display = 'none';
+        welcomeSection.style.display = 'none';
+    }
+
+    function showNoResults() {
+        loadingSection.style.display = 'none';
+        resultsSection.style.display = 'none';
+        noResultsSection.style.display = 'block';
+        welcomeSection.style.display = 'none';
+    }
+
+    function showWelcome() {
+        loadingSection.style.display = 'none';
+        resultsSection.style.display = 'none';
+        noResultsSection.style.display = 'none';
+        welcomeSection.style.display = 'block';
+    }
+
+    // Stats are now static and always visible
+});
+</script>

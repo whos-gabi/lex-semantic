@@ -1,0 +1,44 @@
+<!-- Dictionary Card Component -->
+<div class="card mb-3 shadow-sm border-0">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title mb-0 arg-blue-text">
+                <i class="bi bi-book me-2"></i><%= word %>
+            </h5>
+            <div class="d-flex gap-2">
+                <% if (source && source.includes('US Courts')) { %>
+                    <span class="badge bg-arg-blue text-white">
+                        <i class="bi bi-building me-1"></i>US Courts
+                    </span>
+                <% } %>
+                <% if (source && source.includes("Black")) { %>
+                    <span class="badge bg-green-zomp text-white">
+                        <i class="bi bi-book me-1"></i>Black's Law
+                    </span>
+                <% } %>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <p class="card-text text-muted mb-0" style="line-height: 1.6;">
+                <%- definition %>
+            </p>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-3 text-muted small">
+                <span>
+                    <i class="bi bi-calendar me-1"></i><%= published_at %>
+                </span>
+                <span>
+                    <i class="bi bi-sort-alpha-up me-1"></i><%= letter %>
+                </span>
+            </div>
+            <div>
+                <!-- <a href="#" class="btn btn-outline-primary btn-sm" data-permalink="<%= permalink %>">
+                    <i class="bi bi-link-45deg me-1"></i>View Details
+                </a> -->
+            </div>
+        </div>
+    </div>
+</div>

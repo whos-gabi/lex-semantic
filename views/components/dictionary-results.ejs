@@ -1,0 +1,13 @@
+<% if (Array.isArray(results) && results.length) { %>
+  <% results.forEach(function(result) { %>
+    <%- include('./dictionary-card', {
+      word: result.word,
+      definition: result.definition,
+      source: result.source,
+      permalink: result.permalink,
+      letter: result.letter,
+      published_at: result.published_at
+    }) %>
+  <% }) %>
+<% } %>
+

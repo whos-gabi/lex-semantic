@@ -1,0 +1,32 @@
+<!-- Dark Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <!-- bs5 icon for page  -->
+             <i class="bi bi-file-earmark-text-fill red-text me-2"></i>
+            Lex Semantic
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/">
+                        <i class="bi bi-house red-text me-1"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= activePage === 'semantix' ? 'active' : '' %>" href="/semantix">
+                        <i class="bi bi-paragraph red-text me-1"></i>Semantix
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= activePage === 'blacklaw' ? 'active' : '' %>" href="/blacklaw">
+                        <i class="bi bi-book red-text me-1"></i>BlackLawDex2nd
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -87,14 +87,14 @@ body {
 /* Highlight classes */
 
 .noun-highlight {
-  background-color: #007bff;
+  background-color: var(--arg-blue);
   color: white;
   padding: 2px 4px;
   border-radius: 3px;
   font-weight: bold;
 }
 .verb-highlight {
-  background-color: #e91e63;
+  background-color: var(--red);
   color: white;
   padding: 2px 4px;
   border-radius: 3px;
@@ -103,6 +103,74 @@ body {
 .highlighted-text {
   line-height: 1.6;
   font-size: 1.1rem;
+}
+
+/* Dictionary page specific styles */
+.stats-card {
+  height: 120px;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stats-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stats-label {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 0;
+}
+
+/* Fix text contrast issues - More specific selectors */
+.card.bg-arg-blue .stats-number {
+  color: var(--arg-blue) !important;
+}
+
+.card.bg-arg-blue .stats-label {
+  color: var(--arg-blue) !important;
+}
+
+.card.bg-green-zomp .stats-number {
+  color: var(--green-zomp) !important;
+}
+
+.card.bg-green-zomp .stats-label {
+  color: var(--green-zomp) !important;
+}
+
+.card.bg-night .stats-number {
+  color: var(--night) !important;
+}
+
+.card.bg-night .stats-label {
+  color: var(--night) !important;
+}
+
+/* Force text colors for all stats cards */
+.stats-card .stats-number {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.stats-card .stats-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Search section improvements */
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.stats-section {
+  margin-bottom: 2rem;
 }
 
 .red-text {
